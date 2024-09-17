@@ -1,0 +1,207 @@
+<html>
+<head>
+<title>JubMyn_Snakegame.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #7a7e85;}
+.s1 { color: #bcbec4;}
+.s2 { color: #cf8e6d;}
+.s3 { color: #bcbec4;}
+.s4 { color: #2aacb8;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+JubMyn_Snakegame.py</font>
+</center></td></tr></table>
+<pre><span class="s0"># importing libraries</span>
+<span class="s2">import </span><span class="s1">pygame</span>
+<span class="s2">import </span><span class="s1">time</span>
+<span class="s2">import </span><span class="s1">random</span>
+
+<span class="s1">snake_speed </span><span class="s3">= </span><span class="s4">15</span>
+
+<span class="s0"># Window size</span>
+<span class="s1">window_x </span><span class="s3">= </span><span class="s4">720</span>
+<span class="s1">window_y </span><span class="s3">= </span><span class="s4">480</span>
+
+<span class="s0"># defining colors</span>
+<span class="s1">black </span><span class="s3">= </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">Color</span><span class="s3">(</span><span class="s4">0</span><span class="s3">, </span><span class="s4">0</span><span class="s3">, </span><span class="s4">0</span><span class="s3">)</span>
+<span class="s1">white </span><span class="s3">= </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">Color</span><span class="s3">(</span><span class="s4">255</span><span class="s3">, </span><span class="s4">255</span><span class="s3">, </span><span class="s4">255</span><span class="s3">)</span>
+<span class="s1">red </span><span class="s3">= </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">Color</span><span class="s3">(</span><span class="s4">255</span><span class="s3">, </span><span class="s4">0</span><span class="s3">, </span><span class="s4">0</span><span class="s3">)</span>
+<span class="s1">green </span><span class="s3">= </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">Color</span><span class="s3">(</span><span class="s4">0</span><span class="s3">, </span><span class="s4">255</span><span class="s3">, </span><span class="s4">0</span><span class="s3">)</span>
+<span class="s1">blue </span><span class="s3">= </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">Color</span><span class="s3">(</span><span class="s4">0</span><span class="s3">, </span><span class="s4">0</span><span class="s3">, </span><span class="s4">255</span><span class="s3">)</span>
+
+<span class="s0"># initializing pygame</span>
+<span class="s1">pygame</span><span class="s3">.</span><span class="s1">init</span><span class="s3">()</span>
+
+<span class="s0"># Initialise game window</span>
+<span class="s1">pygame</span><span class="s3">.</span><span class="s1">display</span><span class="s3">.</span><span class="s1">set_caption</span><span class="s3">(</span><span class="s5">'JubMyn Snakes'</span><span class="s3">)</span>
+<span class="s1">game_window </span><span class="s3">= </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">display</span><span class="s3">.</span><span class="s1">set_mode</span><span class="s3">((</span><span class="s1">window_x</span><span class="s3">, </span><span class="s1">window_y</span><span class="s3">))</span>
+
+<span class="s0"># FPS controller</span>
+<span class="s1">fps </span><span class="s3">= </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">time</span><span class="s3">.</span><span class="s1">Clock</span><span class="s3">()</span>
+
+<span class="s0"># snake default position</span>
+<span class="s1">snake_pos </span><span class="s3">= [</span><span class="s4">100</span><span class="s3">, </span><span class="s4">50</span><span class="s3">]</span>
+
+<span class="s0"># define first 4 blocks of snake</span>
+<span class="s0"># body</span>
+<span class="s1">snake_bod </span><span class="s3">= [[</span><span class="s4">100</span><span class="s3">, </span><span class="s4">50</span><span class="s3">],</span>
+             <span class="s3">[</span><span class="s4">90</span><span class="s3">, </span><span class="s4">50</span><span class="s3">],</span>
+             <span class="s3">[</span><span class="s4">80</span><span class="s3">, </span><span class="s4">50</span><span class="s3">],</span>
+             <span class="s3">[</span><span class="s4">70</span><span class="s3">, </span><span class="s4">50</span><span class="s3">]</span>
+             <span class="s3">]</span>
+<span class="s0"># fruit position</span>
+<span class="s1">fruit_position </span><span class="s3">= [</span><span class="s1">random</span><span class="s3">.</span><span class="s1">randrange</span><span class="s3">(</span><span class="s4">1</span><span class="s3">, (</span><span class="s1">window_x</span><span class="s3">//</span><span class="s4">10</span><span class="s3">)) * </span><span class="s4">10</span><span class="s3">,</span>
+                  <span class="s1">random</span><span class="s3">.</span><span class="s1">randrange</span><span class="s3">(</span><span class="s4">1</span><span class="s3">, (</span><span class="s1">window_y</span><span class="s3">//</span><span class="s4">10</span><span class="s3">)) * </span><span class="s4">10</span><span class="s3">]</span>
+
+<span class="s1">fruit_spawn </span><span class="s3">= </span><span class="s2">True</span>
+
+<span class="s0"># setting default snake direction</span>
+<span class="s0"># towards right</span>
+<span class="s1">direction </span><span class="s3">= </span><span class="s5">'RIGHT'</span>
+<span class="s1">change_to </span><span class="s3">= </span><span class="s1">direction</span>
+
+<span class="s0"># initial score</span>
+<span class="s1">score </span><span class="s3">= </span><span class="s4">0</span>
+
+<span class="s0"># displaying Score function</span>
+
+
+<span class="s2">def </span><span class="s1">show_score</span><span class="s3">(</span><span class="s1">choice</span><span class="s3">, </span><span class="s1">color</span><span class="s3">, </span><span class="s1">font</span><span class="s3">, </span><span class="s1">size</span><span class="s3">):</span>
+
+    <span class="s0"># creating font object score_font</span>
+    <span class="s1">score_font </span><span class="s3">= </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">font</span><span class="s3">.</span><span class="s1">SysFont</span><span class="s3">(</span><span class="s1">font</span><span class="s3">, </span><span class="s1">size</span><span class="s3">)</span>
+
+    <span class="s0"># create the display surface object</span>
+    <span class="s0"># score_surface</span>
+    <span class="s1">score_surface </span><span class="s3">= </span><span class="s1">score_font</span><span class="s3">.</span><span class="s1">render</span><span class="s3">(</span><span class="s5">'Score : ' </span><span class="s3">+ </span><span class="s1">str</span><span class="s3">(</span><span class="s1">score</span><span class="s3">), </span><span class="s2">True</span><span class="s3">, </span><span class="s1">color</span><span class="s3">)</span>
+
+    <span class="s0"># create rectangular object for the</span>
+    <span class="s0"># text surface object</span>
+    <span class="s1">score_rect </span><span class="s3">= </span><span class="s1">score_surface</span><span class="s3">.</span><span class="s1">get_rect</span><span class="s3">()</span>
+
+    <span class="s0"># displaying text</span>
+    <span class="s1">game_window</span><span class="s3">.</span><span class="s1">blit</span><span class="s3">(</span><span class="s1">score_surface</span><span class="s3">, </span><span class="s1">score_rect</span><span class="s3">)</span>
+
+<span class="s0"># game over function</span>
+
+
+<span class="s2">def </span><span class="s1">game_over</span><span class="s3">():</span>
+
+    <span class="s0"># creating font object my_font</span>
+    <span class="s1">my_font </span><span class="s3">= </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">font</span><span class="s3">.</span><span class="s1">SysFont</span><span class="s3">(</span><span class="s5">'times new roman'</span><span class="s3">, </span><span class="s4">50</span><span class="s3">)</span>
+
+    <span class="s0"># creating a text surface on which text</span>
+    <span class="s0"># will be drawn</span>
+    <span class="s1">game_over_surface </span><span class="s3">= </span><span class="s1">my_font</span><span class="s3">.</span><span class="s1">render</span><span class="s3">(</span>
+        <span class="s5">'Your Score is : '</span><span class="s3">, +</span><span class="s1">int</span><span class="s3">(</span><span class="s1">score</span><span class="s3">), </span><span class="s2">True</span><span class="s3">, </span><span class="s1">red</span><span class="s3">)</span>
+
+    <span class="s0"># create a rectangular object for the text</span>
+    <span class="s0"># surface object</span>
+    <span class="s1">game_over_rect </span><span class="s3">= </span><span class="s1">game_over_surface</span><span class="s3">.</span><span class="s1">get_rect</span><span class="s3">()</span>
+
+    <span class="s0"># setting position of the text</span>
+    <span class="s1">game_over_rect</span><span class="s3">.</span><span class="s1">midtop </span><span class="s3">= (</span><span class="s1">window_x</span><span class="s3">/</span><span class="s4">2</span><span class="s3">, </span><span class="s1">window_y</span><span class="s3">/</span><span class="s4">4</span><span class="s3">)</span>
+
+    <span class="s0"># blit will draw the text on screen</span>
+    <span class="s1">game_window</span><span class="s3">.</span><span class="s1">blit</span><span class="s3">(</span><span class="s1">game_over_surface</span><span class="s3">, </span><span class="s1">game_over_rect</span><span class="s3">)</span>
+    <span class="s1">pygame</span><span class="s3">.</span><span class="s1">display</span><span class="s3">.</span><span class="s1">flip</span><span class="s3">()</span>
+
+    <span class="s0"># after 2 seconds we will quit the</span>
+    <span class="s0"># program</span>
+    <span class="s1">time</span><span class="s3">.</span><span class="s1">sleep</span><span class="s3">(</span><span class="s4">2</span><span class="s3">)</span>
+
+    <span class="s0"># deactivating pygame library</span>
+    <span class="s1">pygame</span><span class="s3">.</span><span class="s1">quit</span><span class="s3">()</span>
+
+    <span class="s0"># quit the program</span>
+    <span class="s1">quit</span><span class="s3">()</span>
+
+
+<span class="s0"># Main function</span>
+<span class="s2">while True</span><span class="s3">:</span>
+
+    <span class="s0"># handling key events</span>
+    <span class="s2">for </span><span class="s1">event </span><span class="s2">in </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">event</span><span class="s3">.</span><span class="s1">get</span><span class="s3">():</span>
+        <span class="s2">if </span><span class="s1">event</span><span class="s3">.</span><span class="s1">type </span><span class="s3">== </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">KEYDOWN</span><span class="s3">:</span>
+            <span class="s2">if </span><span class="s1">event</span><span class="s3">.</span><span class="s1">key </span><span class="s3">== </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">K_UP</span><span class="s3">:</span>
+                <span class="s1">change_to </span><span class="s3">= </span><span class="s5">'UP'</span>
+            <span class="s2">if </span><span class="s1">event</span><span class="s3">.</span><span class="s1">key </span><span class="s3">== </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">K_DOWN</span><span class="s3">:</span>
+                <span class="s1">change_to </span><span class="s3">= </span><span class="s5">'DOWN'</span>
+            <span class="s2">if </span><span class="s1">event</span><span class="s3">.</span><span class="s1">key </span><span class="s3">== </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">K_LEFT</span><span class="s3">:</span>
+                <span class="s1">change_to </span><span class="s3">= </span><span class="s5">'LEFT'</span>
+            <span class="s2">if </span><span class="s1">event</span><span class="s3">.</span><span class="s1">key </span><span class="s3">== </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">K_RIGHT</span><span class="s3">:</span>
+                <span class="s1">change_to </span><span class="s3">= </span><span class="s5">'RIGHT'</span>
+
+    <span class="s0"># If two keys pressed simultaneously</span>
+    <span class="s0"># we don't want snake to move into two directions</span>
+    <span class="s0"># simultaneously</span>
+    <span class="s2">if </span><span class="s1">change_to </span><span class="s3">== </span><span class="s5">'UP' </span><span class="s2">and </span><span class="s1">direction </span><span class="s3">!= </span><span class="s5">'DOWN'</span><span class="s3">:</span>
+        <span class="s1">direction </span><span class="s3">= </span><span class="s5">'UP'</span>
+    <span class="s2">if </span><span class="s1">change_to </span><span class="s3">== </span><span class="s5">'DOWN' </span><span class="s2">and </span><span class="s1">direction </span><span class="s3">!= </span><span class="s5">'UP'</span><span class="s3">:</span>
+        <span class="s1">direction </span><span class="s3">= </span><span class="s5">'DOWN'</span>
+    <span class="s2">if </span><span class="s1">change_to </span><span class="s3">== </span><span class="s5">'LEFT' </span><span class="s2">and </span><span class="s1">direction </span><span class="s3">!= </span><span class="s5">'RIGHT'</span><span class="s3">:</span>
+        <span class="s1">direction </span><span class="s3">= </span><span class="s5">'LEFT'</span>
+    <span class="s2">if </span><span class="s1">change_to </span><span class="s3">== </span><span class="s5">'RIGHT' </span><span class="s2">and </span><span class="s1">direction </span><span class="s3">!= </span><span class="s5">'LEFT'</span><span class="s3">:</span>
+        <span class="s1">direction </span><span class="s3">= </span><span class="s5">'RIGHT'</span>
+
+    <span class="s0"># Moving the snake</span>
+    <span class="s2">if </span><span class="s1">direction </span><span class="s3">== </span><span class="s5">'UP'</span><span class="s3">:</span>
+        <span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">1</span><span class="s3">] -= </span><span class="s4">10</span>
+    <span class="s2">if </span><span class="s1">direction </span><span class="s3">== </span><span class="s5">'DOWN'</span><span class="s3">:</span>
+        <span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">1</span><span class="s3">] += </span><span class="s4">10</span>
+    <span class="s2">if </span><span class="s1">direction </span><span class="s3">== </span><span class="s5">&quot;LEFT&quot;</span><span class="s3">:</span>
+        <span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">0</span><span class="s3">] -= </span><span class="s4">10</span>
+    <span class="s2">if </span><span class="s1">direction </span><span class="s3">== </span><span class="s5">'RIGHT'</span><span class="s3">:</span>
+        <span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">0</span><span class="s3">] += </span><span class="s4">10</span>
+
+    <span class="s0"># Snake body growing mechanism</span>
+    <span class="s0"># if fruits and snakes collide then scores will be</span>
+    <span class="s0"># incremented by 10</span>
+    <span class="s1">snake_bod</span><span class="s3">.</span><span class="s1">insert</span><span class="s3">(</span><span class="s4">0</span><span class="s3">, </span><span class="s1">list</span><span class="s3">(</span><span class="s1">snake_pos</span><span class="s3">))</span>
+    <span class="s2">if </span><span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">0</span><span class="s3">] == </span><span class="s1">fruit_position</span><span class="s3">[</span><span class="s4">0</span><span class="s3">] </span><span class="s2">and </span><span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">1</span><span class="s3">] == </span><span class="s1">fruit_position</span><span class="s3">[</span><span class="s4">1</span><span class="s3">]:</span>
+        <span class="s1">score </span><span class="s3">+= </span><span class="s4">10</span>
+        <span class="s1">fruit_spawn </span><span class="s3">= </span><span class="s2">False</span>
+    <span class="s2">else</span><span class="s3">:</span>
+        <span class="s1">snake_bod</span><span class="s3">.</span><span class="s1">pop</span><span class="s3">()</span>
+
+    <span class="s2">if not </span><span class="s1">fruit_spawn</span><span class="s3">:</span>
+        <span class="s1">fruit_position </span><span class="s3">= [</span><span class="s1">random</span><span class="s3">.</span><span class="s1">randrange</span><span class="s3">(</span><span class="s4">1</span><span class="s3">, (</span><span class="s1">window_x</span><span class="s3">//</span><span class="s4">10</span><span class="s3">)) * </span><span class="s4">10</span><span class="s3">,</span>
+                          <span class="s1">random</span><span class="s3">.</span><span class="s1">randrange</span><span class="s3">(</span><span class="s4">1</span><span class="s3">, (</span><span class="s1">window_y</span><span class="s3">//</span><span class="s4">10</span><span class="s3">)) * </span><span class="s4">10</span><span class="s3">]</span>
+
+    <span class="s1">fruit_spawn </span><span class="s3">= </span><span class="s2">True</span>
+    <span class="s1">game_window</span><span class="s3">.</span><span class="s1">fill</span><span class="s3">(</span><span class="s1">black</span><span class="s3">)</span>
+
+    <span class="s2">for </span><span class="s1">pos </span><span class="s2">in </span><span class="s1">snake_bod</span><span class="s3">:</span>
+        <span class="s1">pygame</span><span class="s3">.</span><span class="s1">draw</span><span class="s3">.</span><span class="s1">rect</span><span class="s3">(</span><span class="s1">game_window</span><span class="s3">, </span><span class="s1">green</span><span class="s3">,</span>
+                         <span class="s1">pygame</span><span class="s3">.</span><span class="s1">Rect</span><span class="s3">(</span><span class="s1">pos</span><span class="s3">[</span><span class="s4">0</span><span class="s3">], </span><span class="s1">pos</span><span class="s3">[</span><span class="s4">1</span><span class="s3">], </span><span class="s4">10</span><span class="s3">, </span><span class="s4">10</span><span class="s3">))</span>
+
+    <span class="s1">pygame</span><span class="s3">.</span><span class="s1">draw</span><span class="s3">.</span><span class="s1">rect</span><span class="s3">(</span><span class="s1">game_window</span><span class="s3">, </span><span class="s1">white</span><span class="s3">, </span><span class="s1">pygame</span><span class="s3">.</span><span class="s1">Rect</span><span class="s3">(</span><span class="s1">fruit_position</span><span class="s3">[</span><span class="s4">0</span><span class="s3">], </span><span class="s1">fruit_position</span><span class="s3">[</span><span class="s4">1</span><span class="s3">], </span><span class="s4">10</span><span class="s3">, </span><span class="s4">10</span><span class="s3">))</span>
+
+    <span class="s0"># Game over conditions</span>
+    <span class="s2">if </span><span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">0</span><span class="s3">] &lt; </span><span class="s4">0 </span><span class="s2">or </span><span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">0</span><span class="s3">] &gt; </span><span class="s1">window_x</span><span class="s3">-</span><span class="s4">10</span><span class="s3">:</span>
+        <span class="s1">game_over</span><span class="s3">()</span>
+    <span class="s2">if </span><span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">1</span><span class="s3">] &lt; </span><span class="s4">0 </span><span class="s2">or </span><span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">1</span><span class="s3">] &gt; </span><span class="s1">window_y</span><span class="s3">-</span><span class="s4">10</span><span class="s3">:</span>
+        <span class="s1">game_over</span><span class="s3">()</span>
+
+    <span class="s0"># Touching the snake body</span>
+    <span class="s2">for </span><span class="s1">block </span><span class="s2">in </span><span class="s1">snake_bod</span><span class="s3">[</span><span class="s4">1</span><span class="s3">:]:</span>
+        <span class="s2">if </span><span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">0</span><span class="s3">] == </span><span class="s1">block</span><span class="s3">[</span><span class="s4">0</span><span class="s3">] </span><span class="s2">and </span><span class="s1">snake_pos</span><span class="s3">[</span><span class="s4">1</span><span class="s3">] == </span><span class="s1">block</span><span class="s3">[</span><span class="s4">1</span><span class="s3">]:</span>
+            <span class="s1">game_over</span><span class="s3">()</span>
+
+    <span class="s0"># displaying score continuously</span>
+    <span class="s1">show_score</span><span class="s3">(</span><span class="s4">1</span><span class="s3">, </span><span class="s1">white</span><span class="s3">, </span><span class="s5">'times new roman'</span><span class="s3">, </span><span class="s4">20</span><span class="s3">)</span>
+
+    <span class="s0"># Refresh game screen</span>
+    <span class="s1">pygame</span><span class="s3">.</span><span class="s1">display</span><span class="s3">.</span><span class="s1">update</span><span class="s3">()</span>
+
+    <span class="s0"># Frame per second / refresh rate</span>
+    <span class="s1">fps</span><span class="s3">.</span><span class="s1">tick</span><span class="s3">(</span><span class="s1">snake_speed</span><span class="s3">)</span>
+</pre>
+</body>
+</html>
